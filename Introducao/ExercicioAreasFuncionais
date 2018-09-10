@@ -1,0 +1,92 @@
+Exercício sobre áreas funcionais
+
+Escolher um dispositivo e descreva 10 informações que podem ser gerenciadas. Para cada informação indicar:
+
+    nome da informação
+    tipo de retorno (inteiro, double, string, ...)
+    tipo de acesso (read only, read-write)
+    área funcional
+    descrição do retorno da informação
+
+Smart Car - Joice Marek e Henrique Corrêa
+
+Informação 1:
+
+    Nome: Tipo de combustivel;
+    Tipo de retorno: String;
+    Tipo de acesso: Read only;
+    Área funcional: Configuração;
+    Descrição: Informa qual o tipo de combustível utilizado pelo carro (ex: gasolina, bateria, álcool, gás, etc).
+
+Informação 2:
+
+    Nome: Consumo de combustível;
+    Tipo de retorno: Double;
+    Tipo de acesso: Read only;
+    Área funcional: Desempenho;
+    Descrição: Informa a razão de quantos quilômetros por litro foram percorridos.
+
+Informação 3:
+
+    Nome: Nível de combustível;
+    Tipo de retorno: Double;
+    Tipo de acesso: Read only;
+    Área funcional: Falha;
+    Descrição: Informa a quantidade de combustível no tanque do veículo.
+
+Informação 4:
+
+    Nome: Temperatura do motor;
+    Tipo de retorno: Double;
+    Tipo acesso: Read only;
+    Área funcional: Falha;
+    Descrição: Informa temperatura do motor ao usuário.
+
+Informação 5:
+
+    Nome: Alerta de revisão;
+    Tipo de retorno: String;
+    Tipo de acesso: Read Only;
+    Área funcional: Falha;
+    Descrição: Alerta usuário para troca de peças e revisões conforme quilometragem do veículo.
+
+Informação 6:
+
+    Nome: Sensor de proximidade;
+    Tipo de retorno: String;
+    Tipo de acesso: Read Only;
+    Área funcional: Falhas
+    Descrição: Alerta se existem obstáculos próximos do veículo.
+
+Informação 7:
+
+    Nome: Consumo frigobar
+    Tipo de retorno: Double;
+    Tipo de acesso: Read and write;
+    Área funcional: Accounting;
+    Descrição: Retorna valor $ em produtos consumidos pelo passageiros (Disponível para modelos Smart Uber).
+
+Informação 8:
+
+    Nome: AVG Antivirus;
+    Tipo de retorno: Integer;
+    Tipo de acesso: Read only;
+    Área funcional: Segurança;
+    Descrição: Número de ameaças detectadas ao espetar o pendrive para ouvir música.
+
+Informação 9:
+
+    Nome: Cortana
+    Tipo de retorno: .wav
+    Tipo de acesso: Read & Write;
+    Área funcional: Configuração;
+    Descrição: Inteligência artificial para fazer companhia ao motorista quando se sentir sozinho. Útil para gerenciar privacidade do usuário.
+
+Informação 10:
+
+    Nome: Temperatura interna;
+    Tipo de retorno: Double
+    Tipo de acesso: Read only;
+    Área funcional: Desempenho;
+    Descrição: Monitora temperatura ambiente dentro do veículo.
+
