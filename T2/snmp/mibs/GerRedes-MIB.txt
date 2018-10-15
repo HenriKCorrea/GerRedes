@@ -1,0 +1,63 @@
+GerRedes-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    Counter FROM RFC1155-SMI
+    DisplayString FROM SNMPv2-TC
+    OBJECT-TYPE FROM RFC-1212
+    experimental FROM RFC1155-SMI;
+
+GerRedes OBJECT IDENTIFIER ::= { experimental 17 }
+
+-- Definição do grupo
+process OBJECT IDENTIFIER ::= { GerRedes 1 }
+
+-- Objetos do grupo psInfo
+psCount OBJECT-TYPE
+SYNTAX Counter
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get count of running process in the system"
+    ::= { process 1 }
+
+psHighPageFault OBJECT-TYPE
+SYNTAX Counter
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get the highest major page fault value from running process"
+    ::= { process 2 }
+
+psHighPageFaultName OBJECT-TYPE
+SYNTAX DisplayString
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get the name of the process with the highest major page fault value"
+    ::= { process 3 }
+
+psHighCPU OBJECT-TYPE
+SYNTAX DisplayString
+ACCESS read-write
+STATUS mandatory
+DESCRIPTION "Get the highest CPU usage value in percent from running process. Set the target CPU usage for application for 2 minutes"
+    ::= { process 4 }
+
+psHighCPUName OBJECT-TYPE
+SYNTAX DisplayString
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get the name of the process with the highest CPU usage value"
+    ::= { process 5 }
+
+psHighMemory OBJECT-TYPE
+SYNTAX Counter
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get the process with the highest memory usage value"
+    ::= { process 6 }
+
+psHighMemoryName OBJECT-TYPE
+SYNTAX DisplayString
+ACCESS read-only
+STATUS mandatory
+DESCRIPTION "Get the name of the process with the highest memory usage value"
+    ::= { process 7 }
+END

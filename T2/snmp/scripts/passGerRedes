@@ -1,0 +1,139 @@
+#!/bin/sh -f
+
+#UPTIME=$( /bin/ps -A --no-headers | wc -l)
+#echo $2
+#echo Counter
+#echo $UPTIME
+
+#############################
+#Function declaration
+#############################
+
+function_pscount(){
+  echo $( ps -A --no-headers | wc -l);
+}
+
+function_pshighpagefault(){
+  echo $( ps -eo maj_flt --sort=maj_flt | tail -n 1 | tr -d [:space:] );
+}
+
+function_pshighpagefaultname(){
+  echo $( ps -eo comm --sort=maj_flt | tail -n 1 | tr -d [:space:] );
+}
+
+function_pshighcpu(){
+  echo $(ps -eo pcpu --sort=-pcpu --no-headers | head -n 1);
+}
+
+function_set_pshighcpu(){
+  PROC_PID=$( ps -eo pid --sort=-pcpu --no-headers | head -n 1 ); #Get PID of the process with highest CPU usage
+  $( timeout 20s cpulimit -p $PROC_PID -l $4 );  #Limit the process with the CPU usage defined in argument $4 for 2 minutes
+}
+
+
+##########################
+#MIB Object ID Definition
+##########################
+
+
+PLACE=".1.3.6.1.3.17"  # experimental.GerRedes
+GERREDES_OID=".1.3.6.1.3.17"  # experimental.GerRedes
+PSINFO_OID="$GERREDES_OID.1"  # experimental.GerRedes.process
+PSCOUNT_OID="$PSINFO_OID.1"  # experimental.GerRedes.process.psCount
+PSHIGHPAGEFAULT_OID="$PSINFO_OID.2"  # experimental.GerRedes.process.psHighPageFault
+PSHIGHPAGEFAULTNAME_OID="$PSINFO_OID.3"  # experimental.GerRedes.process.psHighPageFaultName
+PSHIGHCPU_OID="$PSINFO_OID.4"  # experimental.GerRedes.process.psHighCPU
+PSHIGHCPUNAME_OID="$PSINFO_OID.5"  # experimental.GerRedes.process.psHighCPUName
+PSHIGHMEMORY_OID="$PSINFO_OID.6"  # experimental.GerRedes.process.psHighMemory
+PSHIGHMEMORYNAME_OID="$PSINFO_OID.7"  # experimental.GerRedes.process.psHighMemoryName
+
+
+########################
+# Auxiliary variables
+########################
+
+REQ="$2"                          # Requested OID
+RESULT=false                      # Boolean flag used to inform if arguments are valid
+
+#################################
+#  GETNEXT requests - determine next valid instance
+#################################
+
+if [ "$1" = "-n" ]; then
+
+  case $REQ in
+    $PLACE|\
+    $PLACE.0|\
+    $PLACE.0.*|\
+    $PLACE.1|\
+    $PLACE.1.0|\
+    $PLACE.1.0.*|\
+    $PLACE.1.1)  RET=$PSCOUNT_OID.0; RESULT=true ;;
+
+    $PLACE.1.1.*|\
+    $PLACE.1.2) RET=$PSHIGHPAGEFAULT_OID.0; RESULT=true ;;
+
+    $PLACE.1.2.*|\
+    $PLACE.1.3) RET=$PSHIGHPAGEFAULTNAME_OID.0; RESULT=true ;;
+
+    $PLACE.1.3.*|\
+    $PLACE.1.4) RET=$PSHIGHCPU_OID.0; RESULT=true ;;    
+
+    $PLACE.1.4.*|\
+    $PLACE.1.5) RET=$PSHIGHCPUNAME_OID.0; RESULT=true ;;
+
+    $PLACE.1.5.*|\
+    $PLACE.1.6) RET=$PSHIGHMEMORY_OID.0; RESULT=true ;;
+
+    $PLACE.1.6.*|\
+    $PLACE.1.7) RET=$PSHIGHMEMORYNAME_OID.0; RESULT=true ;;     
+  esac
+
+fi
+
+
+
+##########################################
+## SET requests
+##########################################
+if [ "$1" = "-s" ]; then
+
+  #TODO: place GerRedes SET procedures
+  echo $* >> /tmp/passtest.log
+  exit 0
+  
+fi
+
+###########################################
+#  GET requests - check for valid instance
+###########################################
+if [ "$1" = "-g" ]; then
+  case "$REQ" in
+    $PSCOUNT_OID.0|\
+    $PSHIGHPAGEFAULT_OID.0|\
+    $PSHIGHPAGEFAULTNAME_OID.0|\
+    $PSHIGHCPU_OID.0|\
+    $PSHIGHCPUNAME_OID.0|\
+    $PSHIGHMEMORY_OID.0|\
+    $PSHIGHMEMORYNAME_OID.0)   RET=$REQ; RESULT=true ;;   #Requested Object ID is known and valid
+  esac
+fi
+
+
+##########################################
+# Request return
+##########################################
+
+#If Object ID parse was successfull, process requested operation
+if "$RESULT" ; then
+  echo "$RET";        #Return Object ID
+
+  #Return data type and call function to return data
+  case "$RET" in
+    $PSCOUNT_OID.0)   echo "counter"; function_pscount;;
+    $PSHIGHPAGEFAULT_OID.0)    echo "counter";  function_pshighpagefault;;
+    $PSHIGHPAGEFAULTNAME_OID.0)    echo "string";  function_pshighpagefaultname;;
+    $PSHIGHCPU_OID.0) echo "string"; function_pshighcpu;;
+    *)  exit 0;;    # Default value (should not happen)
+  esac
+fi
