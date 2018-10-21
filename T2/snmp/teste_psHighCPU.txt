@@ -1,0 +1,15 @@
+Testar comando snmpset com o objeto psHighCPU:
+
+->Abrir um novo terminal e executar o script setHandler.sh (o script executa com permissões de usuário os requests de set que o agente snmp recebeu):
+    ~/.snmp/scripts/setHandler.sh
+
+->Abrir um novo terminal e executar o programa de stress (permanece por 900 segundos): 
+    stress -c 1 -t 900
+
+->Abrir um novo terminal e executar o programa top (deve aparecer no topo da lista o programa stress com 100% de uso da cpu)
+    top
+
+->Realizar a requisição snmp para reduzir o uso de CPU para 70%:
+    snmpset -v 1 -c private localhost psHighCPU.0 s 70
+
+->Volte ao terminal com o programa top em execução. O programa stress deve mostrar o uso de CPU reduzido em torno de 70% (A restrição dura 20 segundos)
